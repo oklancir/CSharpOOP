@@ -7,13 +7,17 @@ namespace CSharpOOP
     {
         public string Id { get; set; }
         public DateTime DateIssued { get; private set; }
-        public IList<object> Vehicles { get; private set; }
+        public Vehicle Vehicle { get; private set; }
 
-        public License(string id, Vehicle vehicle)
+        public License(Vehicle vehicle)
         {
-            Id = id;
             DateIssued = DateTime.Today;
-            Vehicles.Add(vehicle);
+            Vehicle = vehicle;
+        }
+
+        public override string ToString()
+        {
+            return DateIssued + " " + Vehicle;
         }
     }
 }

@@ -11,7 +11,6 @@ namespace CSharpOOP
         public int Age { get; set; }
         public string Id { get; set; }
 
-        // Driver needs to know how to drive at least one vehicle.
         public Driver(params Vehicle[] vehicles)
         {
             Licenses = new List<License>();
@@ -23,12 +22,22 @@ namespace CSharpOOP
 
         public void LearnToDrive(Vehicle vehicle)
         {
-            Licenses.Add(new License(this.Id, vehicle));
+            Licenses.Add(new License(vehicle));
         }
 
-        public bool CanDrive(Type vehicleType)
+        public bool CanDriveAerial()
         {
-            return Licenses.Any(vType => vType.GetType().IsAssignableFrom(vehicleType));
+            return Licenses.Any(l => l.Vehicle is IAerialVehicle);
+        }
+
+        public bool CanDriveGround()
+        {
+            return Licenses.Any(l => l.Vehicle is IGroundVehicle);
+        }
+
+        public override string ToString()
+        {
+            return FullName;
         }
     }
 }
