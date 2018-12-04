@@ -5,7 +5,8 @@ namespace CSharpOOP
         public abstract class Vehicle
         {
             public string Name { get; set; }
-            public string Id { get; set; }
+            public string Color { get; set; }
+            public int Id { get; set; }
             public bool IsRunning { get; private set; }
 
             public void Drive()

@@ -9,7 +9,7 @@ namespace CSharpOOP
         public IList<License> Licenses { get; private set; }
         public string FullName { get; set; }
         public int Age { get; set; }
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public Driver(params Vehicle[] vehicles)
         {

@@ -12,18 +12,21 @@ namespace CSharpOOP
         {
             IList<Driver> drivers = new List<Driver>();
             IList<Vehicle> vehicles = new List<Vehicle>();
-            var tank = new Tank(){Id = "234H", Name = "Sherman"};
+            
+            var tank = new Tank(){Id = 34, Name = "Sherman"};
+            var airplane = new Airplane() { Id = 737, Name = "Boeing" };
+            var helicopter = new Helicopter() { Id = 28, Name = "Black Hawk" };
+
             vehicles.Add(tank);
-            var helicopter = new Helicopter() { Id = "286", Name = "Black Hawk" };
             vehicles.Add(helicopter);
-            var airplane = new Airplane() { Id = "737", Name = "Boeing" };
             vehicles.Add(airplane);
-            var driverJohn = new Driver(helicopter) { Age = 18, FullName = "John McCain", Id = "John" };
-            var driverSteve = new Driver(tank) { Age = 22, FullName = "Steve Buscemi", Id = "Cobra" };
-            var driverRingo = new Driver(airplane) { Age = 18, FullName = "Ringo Starr", Id = "Not-A-Drummer" };
-            var driverHal = new Driver(new Tank(){Id = "Tanky" ,Name = "Wasteland tank"}) { Age = 18, FullName = "John McCain", Id = "John" };
-            var driverMotorola6800 = new Driver(new Airplane(){Id = "F16", Name = "Vanquish"}) { Age = 22, FullName = "Steve Buscemi", Id = "Cobra" };
-            var driverCobol = new Driver(new Helicopter(){Id = "MI8", Name = "Not-A-Number"}) { Age = 18, FullName = "Ringo Starr", Id = "Not-A-Drummer" };
+
+            var driverJohn = new Driver(helicopter) { Age = 18, FullName = "John McCain", Id = 1};
+            var driverSteve = new Driver(tank) { Age = 22, FullName = "Steve Buscemi", Id = 2};
+            var driverRingo = new Driver(airplane) { Age = 18, FullName = "Ringo Starr", Id = 3 };
+            var driverHal = new Driver(new Tank(){Id = 777 ,Name = "Wasteland tank"}) { Age = 18, FullName = "John McCain", Id = 4 };
+            var driverMotorola6800 = new Driver(new Airplane(){Id = 16, Name = "Vanquish"}) { Age = 22, FullName = "Steve Buscemi", Id = 5 };
+            var driverCobol = new Driver(new Helicopter(){Id = 8, Name = "Not-A-Number"}) { Age = 18, FullName = "Ringo Starr", Id = 6 };
 
             drivers.Add(driverJohn);
             drivers.Add(driverSteve);
@@ -36,7 +39,7 @@ namespace CSharpOOP
             var pilots = GetPilots(allDrivers);
             var tankDrivers = GetDrivers(allDrivers);
 
-            driverJohn.LearnToDrive(new Tank() { Id = "A1", Name = "Abrams" });
+            driverJohn.LearnToDrive(new Tank() { Id = 11, Name = "Abrams" });
             
             int? choice;
             do
@@ -56,7 +59,6 @@ namespace CSharpOOP
                         Console.ReadKey();
                         break;
                     case 2:
-                        Console.Clear();
                         var groundVehicles = GetGroundVehicles(vehicles);
                         foreach (var vehicle in groundVehicles)
                         {
@@ -65,7 +67,6 @@ namespace CSharpOOP
                         Console.ReadKey();
                         break;
                     case 3:
-                        Console.Clear();
                         var aerialVehicles = GetGroundVehicles(vehicles);
                         foreach (var vehicle in aerialVehicles)
                         {
@@ -74,7 +75,6 @@ namespace CSharpOOP
                         Console.ReadKey();
                         break;
                     case 4:
-                        Console.Clear();
                         foreach (var driver in allDrivers)
                         {
                             Console.WriteLine(driver.ToString());
@@ -82,7 +82,6 @@ namespace CSharpOOP
                         Console.ReadKey();
                         break;
                     case 5:
-                        Console.Clear();
                         foreach (var pilot in pilots)
                         {
                             Console.WriteLine(pilot.ToString());
@@ -94,7 +93,6 @@ namespace CSharpOOP
                         Console.ReadKey();
                         break;
                     case 6:
-                        Console.Clear();
                         foreach (var tankDriver in tankDrivers)
                         {
                             Console.WriteLine(tankDriver.ToString());

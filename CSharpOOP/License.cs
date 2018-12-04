@@ -5,7 +5,7 @@ namespace CSharpOOP
 {
     public class License
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public DateTime DateIssued { get; private set; }
         public Vehicle Vehicle { get; private set; }
 
