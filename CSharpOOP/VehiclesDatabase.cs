@@ -1,7 +1,6 @@
-﻿using System;
+﻿using NLog;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using NLog;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace CSharpOOP
@@ -10,7 +9,7 @@ namespace CSharpOOP
     {
         private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["localDB"].ConnectionString;
         private static Logger Logger = LogManager.GetLogger("dbLogger");
-        readonly SqlConnection Connection = new SqlConnection(ConnectionString);
+        private SqlConnection Connection = new SqlConnection(ConnectionString);
 
         public SqlConnection OpenConnection()
         {
@@ -44,7 +43,7 @@ namespace CSharpOOP
         public List<Vehicle> GetVehicles()
         {
             Connection.Open();
-            List<Vehicle> vehicles = new  List<Vehicle>();
+            List<Vehicle> vehicles = new List<Vehicle>();
             try
             {
                 string sqlCommandString = "SELECT VehicleID, Name, Color, VehicleTypeID FROM dbo.Vehicles";
@@ -133,6 +132,34 @@ namespace CSharpOOP
             catch (SqlException e)
             {
                 Logger.Error(e, $"Error while adding: {vehicle.ToString()}");
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        public void RemoveVehicle(Vehicle vehicle)
+        {
+            if (vehicle == null)
+                return;
+
+            Connection = OpenConnection();
+
+            try
+            {
+                string sqlCommandString = "DELETE FROM dbo.vehicles WHERE VehicleID = @Id";
+                SqlCommand command = new SqlCommand(sqlCommandString, Connection);
+                command.Parameters.AddWithValue("@Id", vehicle.Id);
+
+                if (command.ExecuteNonQuery() > 0)
+                    Logger.Info($"Vehicle {vehicle.ToString()} has been removed.");
+                else
+                    Logger.Error($"Error while trying to remove {vehicle.ToString()}");
+            }
+            catch (SqlException e)
+            {
+                Logger.Error(e, $"Error while trying to remove {vehicle.ToString()}");
             }
             finally
             {
