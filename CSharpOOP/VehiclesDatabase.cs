@@ -85,11 +85,11 @@ namespace CSharpOOP
                     }
                 }
 
-                logger.Info("Fetched vehicles.");
+                logger.Info("Vehicles fetched successfully.");
             }
             catch (SqlException e)
             {
-                logger.Error(e, $"Error while fetching vehicles.");
+                logger.Error(e, "Error while fetching vehicles.");
             }
             finally
             {
@@ -105,23 +105,23 @@ namespace CSharpOOP
 
             try
             {
-                string sqlCommandString = "INSERT INTO dbo.Vehicles (Name, Color, VehicleTypeID) " +
-                                          "VALUES (@Name, @Color, @VehicleTypeID";
+                string sqlCommandString = "INSERT INTO dbo.Vehicles (VehicleName, Color, VehicleTypeID) " +
+                                          "VALUES (@Name, @Color, @VehicleTypeID)";
                 SqlCommand command = new SqlCommand(sqlCommandString, connection);
 
                 command.Parameters.AddWithValue("@Name", vehicle.Name);
                 command.Parameters.AddWithValue("@Color", vehicle.Color);
                 if (vehicle is Tank)
                 {
-                    command.Parameters.AddWithValue("@VehicleTypeId", 1);
+                    command.Parameters.AddWithValue("@VehicleTypeID", 1);
                 }
                 else if (vehicle is Helicopter)
                 {
-                    command.Parameters.AddWithValue("@VehicleTypeId", 2);
+                    command.Parameters.AddWithValue("@VehicleTypeID", 2);
                 }
                 else
                 {
-                    command.Parameters.AddWithValue("@VehicleTypeId", 3);
+                    command.Parameters.AddWithValue("@VehicleTypeID", 3);
                 }
 
                 if (command.ExecuteNonQuery() > 0)
@@ -186,7 +186,7 @@ namespace CSharpOOP
 
                 while (dataReader.Read())
                 {
-                    if (!drivers.Any(v => v.Id == dataReader.GetInt32(0)))
+                    if (drivers.All(v => v.Id != dataReader.GetInt32(0)))
                     {
                         var driver = new Driver()
                         {
@@ -221,7 +221,7 @@ namespace CSharpOOP
             }
             catch (SqlException e)
             {
-                logger.Error(e, $"Error while fetching drivers.");
+                logger.Error(e, "Error while fetching drivers.");
             }
             finally
             {

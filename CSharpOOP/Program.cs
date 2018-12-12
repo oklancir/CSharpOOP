@@ -11,9 +11,9 @@ namespace CSharpOOP
             IList<Driver> drivers = new List<Driver>();
             IList<Vehicle> vehicles = new List<Vehicle>();
 
-            var tank = new Tank() { Id = 34, Name = "Sherman" };
-            var airplane = new Airplane() { Id = 737, Name = "Boeing" };
-            var helicopter = new Helicopter() { Id = 28, Name = "Black Hawk" };
+            var tank = new Tank() { Id = 34, Name = "Sherman", Color = "Blue" };
+            var airplane = new Airplane() { Id = 737, Name = "Boeing", Color = "Dark Orange" };
+            var helicopter = new Helicopter() { Id = 28, Name = "Black Hawk", Color = "Pink" };
 
             vehicles.Add(tank);
             vehicles.Add(helicopter);
@@ -22,10 +22,10 @@ namespace CSharpOOP
             var driverJohn = new Driver(helicopter) { Age = 18, FullName = "John McCain", Id = 1 };
             var driverSteve = new Driver(tank) { Age = 22, FullName = "Steve Buscemi", Id = 2 };
             var driverRingo = new Driver(airplane) { Age = 18, FullName = "Ringo Starr", Id = 3 };
-            var driverHal = new Driver(new Tank() { Id = 777, Name = "Wasteland tank" }) { Age = 18, FullName = "John McCain", Id = 4 };
-            var driverMotorola6800 = new Driver(new Airplane() { Id = 16, Name = "Vanquish" }) { Age = 22, FullName = "Steve Buscemi", Id = 5 };
-            var driverCobol = new Driver(new Helicopter() { Id = 8, Name = "Not-A-Number" }) { Age = 18, FullName = "Ringo Starr", Id = 6 };
-            Console.WriteLine("Print something: {0} {1}", "prvi string", "drugi string");
+            var driverHal = new Driver(new Tank() { Id = 777, Name = "Wasteland tank", Color = "Blue"}) { Age = 18, FullName = "John McCain", Id = 4 };
+            var driverMotorola6800 = new Driver(new Airplane() { Id = 16, Name = "Vanquish", Color = "Blue" }) { Age = 22, FullName = "Steve Buscemi", Id = 5 };
+            var driverCobol = new Driver(new Helicopter() { Id = 8, Name = "Not-A-Number", Color = "Blue" }) { Age = 18, FullName = "Ringo Starr", Id = 6 };
+
             drivers.Add(driverJohn);
             drivers.Add(driverSteve);
             drivers.Add(driverRingo);
@@ -53,6 +53,7 @@ namespace CSharpOOP
                         foreach (var vehicle in vehicles)
                         {
                             Console.WriteLine("Vehicle: " + vehicle.ToString());
+                            VehiclesDatabase.AddVehicle(vehicle);
                         }
                         Console.ReadKey();
                         break;
@@ -76,6 +77,7 @@ namespace CSharpOOP
                         foreach (var driver in allDrivers)
                         {
                             Console.WriteLine(driver.ToString());
+                            VehiclesDatabase.AddDriver(driver);
                         }
                         Console.ReadKey();
                         break;

@@ -13,20 +13,20 @@ CREATE TABLE dbo.Logs
 );
 
 CREATE TABLE dbo.VehicleType(
-	VehicleTypeID NVARCHAR(30) PRIMARY KEY,
+	VehicleTypeID INT IDENTITY PRIMARY KEY,
 	VehicleTypeName VARCHAR(50)
 );
 
 CREATE TABLE dbo.Drivers (
-	DriverID INT PRIMARY KEY,
+	DriverID INT IDENTITY PRIMARY KEY,
 	FullName VARCHAR(50),
-	Age smallint
+	Age SMALLINT
 );
 
 CREATE TABLE dbo.Vehicles(
-	VehicleID INT PRIMARY KEY,
+	VehicleID INT IDENTITY PRIMARY KEY,
 	VehicleName VARCHAR(50),
-	VehicleTypeID NVARCHAR(30),
+	VehicleTypeID INT,
 	DriverID INT,
 	Color VARCHAR(20),
 	FOREIGN KEY(DriverID) REFERENCES dbo.Drivers(DriverID),
@@ -42,3 +42,5 @@ CREATE TABLE dbo.Licenses (
 	CONSTRAINT FK_Licences_Vehicles FOREIGN KEY (VehicleID) REFERENCES dbo.Vehicles(VehicleID)
 	ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+INSERT INTO dbo.VehicleType(VehicleTypeName) VALUES ('Tank'), ('Helicopter'), ('Airplane');
