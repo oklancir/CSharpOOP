@@ -19,7 +19,8 @@ CREATE TABLE dbo.VehicleType(
 
 CREATE TABLE dbo.Drivers (
 	DriverID INT PRIMARY KEY,
-	FullName VARCHAR(50)
+	FullName VARCHAR(50),
+	Age smallint
 );
 
 CREATE TABLE dbo.Vehicles(
