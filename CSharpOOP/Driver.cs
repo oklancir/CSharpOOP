@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace CSharpOOP
@@ -22,7 +21,7 @@ namespace CSharpOOP
 
         public void LearnToDrive(Vehicle vehicle)
         {
-            Licenses.Add(new License(vehicle));
+            Licenses.Add(new License(vehicle, this));
         }
 
         public bool CanDriveAerial()
@@ -37,7 +36,7 @@ namespace CSharpOOP
 
         public override string ToString()
         {
-            return FullName;
+            return $"{Id}: {FullName} Age: {Age} ";
         }
     }
 }

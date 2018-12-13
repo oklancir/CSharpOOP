@@ -19,7 +19,7 @@ namespace CSharpOOP
 
         public override string ToString()
         {
-            return Name;
+            return $"Vehicle: {Id} {Color} {Name}";
         }
     }
 }

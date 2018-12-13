@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,6 +7,7 @@ namespace CSharpOOP
 {
     class Program
     {
+        private static Logger Logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
             IList<Driver> drivers = new List<Driver>();
@@ -22,7 +24,7 @@ namespace CSharpOOP
             var driverJohn = new Driver(helicopter) { Age = 18, FullName = "John McCain", Id = 1 };
             var driverSteve = new Driver(tank) { Age = 22, FullName = "Steve Buscemi", Id = 2 };
             var driverRingo = new Driver(airplane) { Age = 18, FullName = "Ringo Starr", Id = 3 };
-            var driverHal = new Driver(new Tank() { Id = 777, Name = "Wasteland tank", Color = "Blue"}) { Age = 18, FullName = "John McCain", Id = 4 };
+            var driverHal = new Driver(new Tank() { Id = 777, Name = "Wasteland tank", Color = "Blue" }) { Age = 18, FullName = "John McCain", Id = 4 };
             var driverMotorola6800 = new Driver(new Airplane() { Id = 16, Name = "Vanquish", Color = "Blue" }) { Age = 22, FullName = "Steve Buscemi", Id = 5 };
             var driverCobol = new Driver(new Helicopter() { Id = 8, Name = "Not-A-Number", Color = "Blue" }) { Age = 18, FullName = "Ringo Starr", Id = 6 };
 
@@ -44,7 +46,19 @@ namespace CSharpOOP
             {
                 Console.Clear();
                 Console.WriteLine("Please enter a number for an option to display...");
-                Console.WriteLine("1 - All vehicles \n2 - Ground vehicles \n3 - Aerial vehicles \n4 - All drivers \n5 - Ground drivers \n6 - Pilots \n0 - EXIT");
+                Console.WriteLine("1 - All vehicles" +
+                                  "\n2 - Ground vehicles" +
+                                  "\n3 - Aerial vehicles" +
+                                  "\n4 - All drivers" +
+                                  "\n5 - Ground drivers" +
+                                  "\n6 - Pilots" +
+                                  "\n7 - List Drivers from Database" +
+                                  "\n8 - List Vehicles from Database" +
+                                  "\n9 - Add a new Driver to Database" +
+                                  "\n10 - Add a new Vehicle to Database" +
+                                  "\n11 - Assign a new License to a Driver" +
+                                  "\n12 - Remove a Driver form Database" +
+                                  "\n0 - EXIT ");
                 Console.Write("Choice: ");
 
                 switch (choice = int.Parse(Console.ReadLine()))
@@ -103,6 +117,18 @@ namespace CSharpOOP
                         }
                         Console.ReadKey();
                         break;
+                    case 9:
+                        AddDriverToDb();
+                        break;
+                    case 10:
+                        AddVehicleToDb();
+                        break;
+                    case 11:
+                        AssignLicense();
+                        break;
+                    case 12:
+                        RemoveDriverFromDb();
+                        break;
                     case 0:
                         break;
                     default:
@@ -113,24 +139,122 @@ namespace CSharpOOP
             } while (choice != 0);
         }
 
-        static IList<Driver> GetDrivers(IList<Driver> drivers)
+        private static IList<Driver> GetDrivers(IList<Driver> drivers)
         {
             return drivers.Where(d => d.CanDriveGround()).ToList();
         }
 
-        static IList<Driver> GetPilots(IList<Driver> drivers)
+        private static IList<Driver> GetPilots(IList<Driver> drivers)
         {
             return drivers.Where(p => p.CanDriveAerial()).ToList();
         }
 
-        static IList<Vehicle> GetAerialVehicles(IList<Vehicle> vehicles)
+        private static IList<Vehicle> GetAerialVehicles(IList<Vehicle> vehicles)
         {
             return vehicles.Where(v => v is IAerialVehicle).ToList();
         }
 
-        static IList<Vehicle> GetGroundVehicles(IList<Vehicle> vehicles)
+        private static IList<Vehicle> GetGroundVehicles(IList<Vehicle> vehicles)
         {
             return vehicles.Where(v => v is IGroundVehicle).ToList();
+        }
+
+        private static void AddDriverToDb()
+        {
+            Console.Clear();
+            Console.Write("Full Name: ");
+            var fullName = Console.ReadLine();
+            Console.Write("Age: ");
+            var age = int.Parse(Console.ReadLine() ?? throw new InvalidOperationException("You did not enter a valid number for age"));
+
+            VehiclesDatabase.AddDriver(new Driver() { FullName = fullName, Age = age });
+        }
+
+        private static void AddVehicleToDb()
+        {
+            Console.Clear();
+            Console.Write("Vehicle name: ");
+            var vehicleName = Console.ReadLine();
+            Console.Write("Color: ");
+            var color = Console.ReadLine();
+            Console.Write("Vehicle type (Tank, Helicopter, Airplane): ");
+            var vehicleType = Console.ReadLine();
+
+            if (vehicleType == "Tank")
+            {
+                VehiclesDatabase.AddVehicle(new Tank() { Name = vehicleName, Color = color });
+            }
+            else if (vehicleType == "Helicopter")
+            {
+                VehiclesDatabase.AddVehicle(new Helicopter() { Name = vehicleName, Color = color });
+            }
+            else if (vehicleType == "Airplane")
+            {
+                VehiclesDatabase.AddVehicle(new Airplane() { Name = vehicleName, Color = color });
+            }
+            else
+            {
+                Console.WriteLine("You did not enter a proper vehicle type.");
+            }
+        }
+
+        private static void AssignLicense()
+        {
+            Console.Clear();
+            Console.Write("Driver id: ");
+            var driverId = int.Parse(Console.ReadLine());
+
+            Console.Write("Vehicle type (1: Tank, 2: Helicopter, 3: Airplane): ");
+            var vehicleType = int.Parse(Console.ReadLine());
+
+            Console.Write("Vehicle name: ");
+            var vehicleName = Console.ReadLine();
+
+            Console.Write("Color: ");
+            var color = Console.ReadLine();
+
+            var license = new License();
+
+            switch (vehicleType)
+            {
+                case 1:
+                    license.Vehicle = new Tank() { Name = vehicleName, Color = color };
+                    break;
+                case 2:
+                    license.Vehicle = new Helicopter() { Name = vehicleName, Color = color };
+                    break;
+                default:
+                    license.Vehicle = new Airplane() { Name = vehicleName, Color = color };
+                    break;
+            }
+
+            VehiclesDatabase.AddLicense(license, driverId);
+        }
+
+        private static void RemoveDriverFromDb()
+        {
+            Console.Clear();
+            var drivers = VehiclesDatabase.GetDriversFromDb();
+            Console.Write("Select a driver from the list to remove.");
+            foreach (var driver in drivers)
+            {
+
+                Console.WriteLine(driver.ToString());
+            }
+
+            Console.Write("Driver to remove: ");
+            int id;
+
+            while (!int.TryParse(Console.ReadLine(), out id))
+            {
+                Logger.Info("Wrong ID.");
+                Console.Write("--> ");
+            }
+
+            if (drivers.All(d => d.Id != id))
+                Logger.Info("The driver with the given ID does not exist.");
+            else
+                VehiclesDatabase.RemoveDriver(drivers.Find(v => v.Id == id));
         }
     }
 }

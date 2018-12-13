@@ -27,19 +27,17 @@ CREATE TABLE dbo.Vehicles(
 	VehicleID INT IDENTITY PRIMARY KEY,
 	VehicleName VARCHAR(50),
 	VehicleTypeID INT,
-	DriverID INT,
 	Color VARCHAR(20),
-	FOREIGN KEY(DriverID) REFERENCES dbo.Drivers(DriverID),
 	CONSTRAINT FK_Vehicles_VehicleType FOREIGN KEY(VehicleTypeID) REFERENCES dbo.VehicleType(VehicleTypeID)
 );
 
 CREATE TABLE dbo.Licenses (
 	DriverID INT NOT NULL,
-	VehicleID INT NOT NULL,
+	VehicleTypeID INT NOT NULL,
 	DateIssued DATETIME,
-	CONSTRAINT PK_Licences_DriverID_VehicleID PRIMARY KEY (DriverID, VehicleID),
+	CONSTRAINT PK_Licences_DriverID_VehicleTypeID PRIMARY KEY (DriverID, VehicleTypeID),
 	CONSTRAINT FK_Licences_Drivers FOREIGN KEY (DriverID) REFERENCES dbo.Drivers(DriverID),
-	CONSTRAINT FK_Licences_Vehicles FOREIGN KEY (VehicleID) REFERENCES dbo.Vehicles(VehicleID)
+	CONSTRAINT FK_Licences_Vehicles FOREIGN KEY (VehicleTypeID) REFERENCES dbo.VehicleType(VehicleTypeID)
 	ON DELETE CASCADE ON UPDATE CASCADE
 );
 

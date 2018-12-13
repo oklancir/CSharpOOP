@@ -8,21 +8,21 @@ namespace CSharpOOP
 {
     public class VehiclesDatabase
     {
-        private static readonly string connectionString = ConfigurationManager.ConnectionStrings["localDB"].ConnectionString;
-        private static readonly Logger logger = LogManager.GetLogger("dbLogger");
+        private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["localDB"].ConnectionString;
+        private static readonly Logger Logger = LogManager.GetLogger("dbLogger");
 
         public static SqlConnection OpenConnection()
         {
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(ConnectionString);
 
             try
             {
                 connection.Open();
-                logger.Info("Connection open.");
+                Logger.Info("Connection open.");
             }
             catch (SqlException e)
             {
-                logger.Error(e, "Error while opening the connection.");
+                Logger.Error(e, "Error while opening the connection.");
             }
 
             return connection;
@@ -30,16 +30,16 @@ namespace CSharpOOP
 
         public static void CloseConnection()
         {
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(ConnectionString);
 
             try
             {
                 connection.Close();
-                logger.Info("Connection closed.");
+                Logger.Info("Connection closed.");
             }
             catch (SqlException e)
             {
-                logger.Error(e, "Error while closing the connection.");
+                Logger.Error(e, "Error while closing the connection.");
             }
         }
 
@@ -85,11 +85,11 @@ namespace CSharpOOP
                     }
                 }
 
-                logger.Info("Vehicles fetched successfully.");
+                Logger.Info("Vehicles fetched successfully.");
             }
             catch (SqlException e)
             {
-                logger.Error(e, "Error while fetching vehicles.");
+                Logger.Error(e, "Error while fetching vehicles.");
             }
             finally
             {
@@ -126,16 +126,16 @@ namespace CSharpOOP
 
                 if (command.ExecuteNonQuery() > 0)
                 {
-                    logger.Info($"You have added {vehicle.ToString()}");
+                    Logger.Info($"You have added {vehicle.ToString()}");
                 }
                 else
                 {
-                    logger.Error($"Error while adding {vehicle.ToString()}");
+                    Logger.Error($"Error while adding {vehicle.ToString()}");
                 }
             }
             catch (SqlException e)
             {
-                logger.Error(e, $"Error while adding: {vehicle.ToString()}");
+                Logger.Error(e, $"Error while adding: {vehicle.ToString()}");
             }
             finally
             {
@@ -157,13 +157,13 @@ namespace CSharpOOP
                 command.Parameters.AddWithValue("@Id", vehicle.Id);
 
                 if (command.ExecuteNonQuery() > 0)
-                    logger.Info($"Vehicle {vehicle.ToString()} has been removed.");
+                    Logger.Info($"Vehicle {vehicle.ToString()} has been removed.");
                 else
-                    logger.Error($"Error while trying to remove {vehicle.ToString()}");
+                    Logger.Error($"Error while trying to remove {vehicle.ToString()}");
             }
             catch (SqlException e)
             {
-                logger.Error(e, $"Error while trying to remove {vehicle.ToString()}");
+                Logger.Error(e, $"Error while trying to remove {vehicle.ToString()}");
             }
             finally
             {
@@ -196,11 +196,11 @@ namespace CSharpOOP
 
                         };
 
-                        if (!dataReader.IsDBNull(4))
+                        if (!dataReader.IsDBNull(2))
                         {
-                            if (dataReader.GetInt32(4) == 1)
+                            if (dataReader.GetInt32(1) == 1)
                                 driver.LearnToDrive(new Tank());
-                            else if (dataReader.GetInt32(4) == 2)
+                            else if (dataReader.GetInt32(2) == 2)
                                 driver.LearnToDrive(new Helicopter());
                             else
                                 driver.LearnToDrive(new Airplane());
@@ -217,11 +217,11 @@ namespace CSharpOOP
                             drivers.Last().LearnToDrive(new Airplane());
                     }
                 }
-                logger.Info("Drivers fetched successfully.");
+                Logger.Info("Drivers fetched successfully.");
             }
             catch (SqlException e)
             {
-                logger.Error(e, "Error while fetching drivers.");
+                Logger.Error(e, "Error while fetching drivers.");
             }
             finally
             {
@@ -246,16 +246,16 @@ namespace CSharpOOP
 
                 if (command.ExecuteNonQuery() > 0)
                 {
-                    logger.Info($"Driver {driver.ToString()} has been successfully added.");
+                    Logger.Info($"Driver {driver.ToString()} has been successfully added.");
                 }
                 else
                 {
-                    logger.Error($"Error while adding driver {driver.ToString()}");
+                    Logger.Error($"Error while adding driver {driver.ToString()}");
                 }
             }
             catch (SqlException e)
             {
-                logger.Error(e, $"Error while adding driver {driver.ToString()}");
+                Logger.Error(e, $"Error while adding driver {driver.ToString()}");
             }
             finally
             {
@@ -278,16 +278,16 @@ namespace CSharpOOP
 
                 if (command.ExecuteNonQuery() > 0)
                 {
-                    logger.Info($"Driver {driver.ToString()} has been successfully removed.");
+                    Logger.Info($"Driver {driver.ToString()} has been successfully removed.");
                 }
                 else
                 {
-                    logger.Error($"Error while trying to remove driver {driver.ToString()}");
+                    Logger.Error($"Error while trying to remove driver {driver.ToString()}");
                 }
             }
             catch (SqlException e)
             {
-                logger.Error(e, $"Error while trying to remove driver {driver.ToString()}");
+                Logger.Error(e, $"Error while trying to remove driver {driver.ToString()}");
             }
             finally
             {
@@ -295,16 +295,17 @@ namespace CSharpOOP
             }
         }
 
-        public static void AddLicense(License license)
+        public static void AddLicense(License license, int driverid)
         {
             SqlConnection connection = OpenConnection();
             try
             {
                 string sqlCommandString =
-                    "INSERT INTO dbo.Licenses VALUES (@DriverID, @VehicleTypeID)";
+                    "INSERT INTO dbo.Licenses VALUES (@DriverID, @VehicleTypeID, @DateIssued)";
                 SqlCommand command = new SqlCommand(sqlCommandString, connection);
 
-                command.Parameters.AddWithValue("@DriverID", license.Vehicle);
+                command.Parameters.AddWithValue("@DriverID", driverid);
+                command.Parameters.AddWithValue("@DateIssued", license.DateIssued);
                 if (license.Vehicle is Tank)
                     command.Parameters.AddWithValue("@VehicleTypeID", 1);
                 else if (license.Vehicle is Helicopter)
@@ -315,16 +316,16 @@ namespace CSharpOOP
 
                 if (command.ExecuteNonQuery() > 0)
                 {
-                    logger.Info($"Added a new license for the driver: {license.ToString()} ");
+                    Logger.Info($"Added a new license for the driver: {license.ToString()} ");
                 }
                 else
                 {
-                    logger.Error($"Error while adding a license for the driver: {license.ToString()}");
+                    Logger.Error($"Error while adding a license for the driver: {license.ToString()}");
                 }
             }
             catch (SqlException e)
             {
-                logger.Error(e, $"Error while adding a license for the driver: {license.ToString()}");
+                Logger.Error(e, $"Error while adding a license for the driver: {license.ToString()}");
 
             }
             finally
