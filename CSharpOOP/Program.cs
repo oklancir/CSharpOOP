@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace CSharpOOP
 {
@@ -57,7 +58,8 @@ namespace CSharpOOP
                                   "\n9 - Add a new Driver to Database" +
                                   "\n10 - Add a new Vehicle to Database" +
                                   "\n11 - Assign a new License to a Driver" +
-                                  "\n12 - Remove a Driver form Database" +
+                                  "\n12 - Remove a Driver from Database" +
+                                  "\n13 - Remove a Vehicle from Database" +
                                   "\n0 - EXIT ");
                 Console.Write("Choice: ");
 
@@ -128,6 +130,9 @@ namespace CSharpOOP
                         break;
                     case 12:
                         RemoveDriverFromDb();
+                        break;
+                    case 13:
+                        RemoveVehicleFromDb();
                         break;
                     case 0:
                         break;
@@ -255,6 +260,29 @@ namespace CSharpOOP
                 Logger.Info("The driver with the given ID does not exist.");
             else
                 VehiclesDatabase.RemoveDriver(drivers.Find(v => v.Id == id));
+        }
+
+        private static void RemoveVehicleFromDb()
+        {
+            Console.Clear();
+            var vehicles = VehiclesDatabase.GetVehicles();
+            Console.Write("Select a vehicle from the list to remove.");
+
+            vehicles.ForEach(v => Console.WriteLine(v.ToString()));
+
+            Console.Write("Vehicle to remove: ");
+            int id;
+
+            while (!int.TryParse(Console.ReadLine(), out id))
+            {
+                Logger.Info("Wrong ID.");
+                Console.Write("--> ");
+            }
+
+            if (vehicles.All(v => v.Id != id))
+                Logger.Info("A vehicle with the given ID does not exist.");
+            else
+                VehiclesDatabase.RemoveVehicle(vehicles.Find(v => v.Id == id));
         }
     }
 }
